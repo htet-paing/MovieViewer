@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import com.example.movieviewer.R
+import com.example.movieviewer.feature.detail.MovieDetailActivity
+import com.example.movieviewer.helper.RecyclerViewOnItemClickListener
 import com.example.movieviewer.helper.RetrofitProvider
 import com.example.movieviewer.model.Movie
 import com.example.movieviewer.model.MovieResponse
@@ -27,6 +31,18 @@ class BrowseActivity : AppCompatActivity() {
     title = "Popular"
 
     //Link recycler view to adapter
+    movieRecyclerViewAdapter.setRecyclerViewOnItemClickListener(object : RecyclerViewOnItemClickListener{
+      override fun onItemClick(clickedView: View, position: Int) {
+
+        val selectedMovieId = movieRecyclerViewAdapter.getItem(position).id
+        val intent = MovieDetailActivity.newIntent(this@BrowseActivity,selectedMovieId)
+        startActivity(intent)
+      }
+
+    })
+
+
+
     rvMovie.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
     rvMovie.adapter = movieRecyclerViewAdapter
 
@@ -34,10 +50,8 @@ class BrowseActivity : AppCompatActivity() {
   }
 
   private fun loadData() {
-
-      val movieService = RetrofitProvider.retrofit().create(MovieService::class.java)
-
       showLoading()
+      val movieService = RetrofitProvider.retrofit().create(MovieService::class.java)
     movieService.popular("1611e2ffe746c99b86236930d02c2f2e").enqueue(object : Callback<MovieResponse>{
       override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
 
@@ -47,9 +61,9 @@ class BrowseActivity : AppCompatActivity() {
 
       override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
 
-        if (response.isSuccessful){
+        if (response?.isSuccessful!!){
           val movie = response.body()!!
-          showMovieList(movie.movieLists)
+       showMovieList(movie.movieLists)
         }else{
           showError()
         }

@@ -1,4 +1,4 @@
-package com.example.movieviewer.feature.browse
+  package com.example.movieviewer.feature.browse
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -24,6 +24,7 @@ class MovieRecyclerViewAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     this.movieList.clear()
     this.movieList.addAll(movieList)
     notifyDataSetChanged()
+
   }
 
   fun getItem(position: Int): Movie {
@@ -70,7 +71,7 @@ class MovieRecyclerViewAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     }
 
     fun bindMovie(item: Movie) {
-      TODO("Show Image")
+      //TODO("Show Image")
       val fullPosterPath = "https://image.tmdb.org/t/p/w500/${item.posterPath}"
       GlideApp.with(itemView.context)
         .load(fullPosterPath)
